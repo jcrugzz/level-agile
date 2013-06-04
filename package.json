@@ -1,0 +1,22 @@
+{
+  "name": "level-agile",
+  "description": "module to wrap multilevel into a subjective api",
+  "version": "0.0.0",
+  "repository": {
+    "url": "git://github.com/jcrugzz/level-agile.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "engines": {
+    "node": "0.10.x || 0.8.x"
+  },
+  "dependencies": {
+    "multilevel": "~4.0.2",
+    "level": "~0.9.0"
+  },
+  "devDependencies": {
+    "tape": "~1.0.2"
+  }
+}
