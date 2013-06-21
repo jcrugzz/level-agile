@@ -18,7 +18,7 @@ key = data.service + uid +'\x00' + data.time + '\x00' + data.host
 
 ```
 
-###
+## Querying and key structure
 
 My logic behind this comes from how we would need to query this potentially and
 taking advantage of certain aspects of `leveldb` using streaming range queries
@@ -29,3 +29,13 @@ host, that can just be added to the the end of the key in the range query to
 pull those specific logs. (Not entirely confirmed the way to do this exactly but
 should be accomplished by manipulating the lexicographical aspect of the
 database).
+
+## Software design
+
+So the basis is going to be a through stream based plugin architecture for
+transforming various `godot` metrics (or any type of json object) into a leveldb
+style `key` where effective range querys can be performed.
+
+I am also considering another api layer on top of querying leveldb for these
+specific range queries.
+
