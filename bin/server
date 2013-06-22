@@ -1,0 +1,36 @@
+#!/usr/bin/env node
+
+var nconf = require('nconf'),
+    server = require('../lib/server');
+
+nconf
+  .argv({
+    help:    { alias: 'h' },
+    port:    { alias: 'p' },
+    database:{ alias: 'db'},
+    config:  { alias: 'c' }
+  });
+
+nconf.defaults({
+  port: 4444,
+  config: 'config/devolopment.json'
+});
+
+nconf.file(nconf.get('config'));
+
+if (nconf.get('help')) {
+  console.log([
+   'usage: app-maestro [options]\n',
+    'options:',
+    '  -p,  --port     Port to start level-agile on',
+    '  -db, --database Database path for leveldb'
+    '  -c,  --config   Config file to use',
+    '  -g,  --group    Group to work on',
+    '  -h,  --help     You\'re staring at it'
+  ].join('\n') + '\n');
+  process.exit();
+}
+
+var port = nconf.get('port');
+
+server.listen(port);
