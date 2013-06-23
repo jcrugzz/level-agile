@@ -34,7 +34,7 @@ LevelAgile.prototype.connect = function () {
   //
   // TODO: Have reconnection logic
   //
-  this.db.pipe(net.connect(connectOpts)).pipe(this.db);
+  this.db.pipe(net.connect(this.connectOpts)).pipe(this.db);
 
 };
 
