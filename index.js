@@ -26,6 +26,7 @@ var LevelAgile = module.exports = function (options) {
     port: options.port
   };
 
+  this.connect();
 };
 
 
