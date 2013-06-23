@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var nconf = require('nconf'),
-    server = require('../lib/server');
+    levelServer = require('../lib/server');
 
 nconf
   .argv({
@@ -35,6 +35,10 @@ if (nconf.get('help')) {
 var port = nconf.get('port');
 var database = nconf.get('database');
 
-server(database).listen(port, function () {
+var server = levelServer(database).listen(port, function () {
   console.log('leve-agile listening on port ' + port);
+});
+
+server.on('error', function (err) {
+  console.error(err);
 });

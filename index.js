@@ -11,12 +11,11 @@ var multilevel = require('multilevel'),
 
 var transforms = require('./lib/transforms');
 
-var LevelAgile = module.exports = function (options) {
-  if(!(this instanceof LevelAgile)) { return new LevelAgile(options) }
-
+var LevelAgile = function (options) {
   if (!options || !options.host || !options.port || !options.transform) {
     throw new Error('A port is necessary in order to connect to the server');
   }
+
   EventEmitter.call(this);
 
   this.db = multilevel.client();
@@ -40,4 +39,8 @@ LevelAgile.prototype.connect = function () {
 
 LevelAgile.prototype.writeStream = function () {
   return this.transform.pipe(this.db.writeStream());
+};
+
+module.exports = function(options) {
+  return new LevelAgile(options);
 };
