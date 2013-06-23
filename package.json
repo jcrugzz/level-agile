@@ -18,7 +18,8 @@
   "dependencies": {
     "multilevel": "~4.0.2",
     "level": "~0.9.0",
-    "through": "~2.3.4"
+    "through": "~2.3.4",
+    "nconf": "~0.6.7"
   },
   "devDependencies": {
     "tape": "~1.0.2"
