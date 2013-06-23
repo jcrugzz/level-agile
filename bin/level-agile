@@ -20,7 +20,7 @@ nconf.file(nconf.get('config'));
 
 if (nconf.get('help')) {
   console.log([
-   'usage: app-maestro [options]\n',
+   'usage: level-agile [options]\n',
     'options:',
     '  -p,  --port     Port to start level-agile on',
     '  -db, --database Database path for leveldb'
@@ -32,5 +32,6 @@ if (nconf.get('help')) {
 }
 
 var port = nconf.get('port');
+var database = nconf.get('database');
 
-server.listen(port);
+server(database).listen(port);
