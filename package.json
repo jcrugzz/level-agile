@@ -1,11 +1,14 @@
 {
   "name": "level-agile",
-  "description": "module to wrap multilevel into a subjective api",
+  "description": "multilevel client and server with various data transforms for inserting into leveldb",
   "version": "0.0.0",
   "repository": {
     "url": "git://github.com/jcrugzz/level-agile.git"
   },
   "main": "index.js",
+  "bin": {
+    "level-agile": "./bin/level-agile"
+  },
   "scripts": {
     "test": "tape test/*.js"
   },
@@ -14,9 +17,13 @@
   },
   "dependencies": {
     "multilevel": "~4.0.2",
-    "level": "~0.9.0"
+    "level": "~0.9.0",
+    "through": "~2.3.4"
   },
   "devDependencies": {
     "tape": "~1.0.2"
+  },
+  "publishConfig": {
+    "registry": "http://reg.njitsu.net:5984"
   }
 }
