@@ -27,6 +27,8 @@ var LevelAgile = function (options) {
     port: options.port
   };
 
+  this.db.on('error', this.emit.bind(this, 'error'));
+
   this.connect();
 };
 
@@ -36,7 +38,11 @@ LevelAgile.prototype.connect = function () {
   //
   // TODO: Have reconnection logic
   //
-  this.db.pipe(net.connect(this.connectOpts)).pipe(this.db);
+  var client = net.connect(this.connectOpts);
+
+  client.on('error', this.emit.bind(this, 'error'));
+
+  this.db.pipe(client).pipe(this.db);
 
 };
 
