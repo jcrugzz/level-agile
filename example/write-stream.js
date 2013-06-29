@@ -19,5 +19,5 @@ for (var i=0; i<200; i++) {
 }
 
 level.on('error', function (err) {
-  console.log('err');
+  console.log(err);
 });
