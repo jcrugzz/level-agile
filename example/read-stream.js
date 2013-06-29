@@ -1,4 +1,4 @@
-var levelAgile = require('./');
+var levelAgile = require('../');
 
 var level = levelAgile({
   host: '127.0.0.1',

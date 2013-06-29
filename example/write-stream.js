@@ -1,4 +1,4 @@
-var levelAgile = require('./');
+var levelAgile = require('../');
 var timestamp = require('monotonic-timestamp');
 
 var level = levelAgile({
