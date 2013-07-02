@@ -38,9 +38,9 @@ LevelAgile.prototype.connect = function () {
   //
   // TODO: Have reconnection logic
   //
-  var client = net.connect(this.connectOpts);
+  this.client = net.connect(this.connectOpts);
 
-  client.on('error', this.emit.bind(this, 'error'));
+  this.client.on('error', this.emit.bind(this, 'error'));
 
   this.db.pipe(client).pipe(this.db);
 
