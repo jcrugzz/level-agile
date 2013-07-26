@@ -8,10 +8,9 @@
 var EventEmitter = require('events').EventEmitter,
     net = require('net'),
     util = require('util'),
+    backoff = require('backoff'),
+    liveStream = require('level-live-stream'),
     multilevel = require('multilevel');
-
-
-var transforms = require('./lib/transforms');
 
 var LevelAgile = function (options) {
   if (!options || !options.host || !options.port || !options.transform) {
@@ -21,7 +20,6 @@ var LevelAgile = function (options) {
   EventEmitter.call(this);
 
   this.db = multilevel.client();
-  this.transform = transforms[options.transform];
   this.connectOpts = {
     host: options.host,
     port: options.port
@@ -35,9 +33,7 @@ var LevelAgile = function (options) {
 util.inherits(LevelAgile, EventEmitter);
 
 LevelAgile.prototype.connect = function () {
-  //
-  // TODO: Have reconnection logic
-  //
+
   this.client = net.connect(this.connectOpts);
 
   this.client.on('error', this.emit.bind(this, 'error'));
@@ -47,6 +43,7 @@ LevelAgile.prototype.connect = function () {
 };
 
 LevelAgile.prototype.writeStream = function (options) {
+
   var ws = this.db.createWriteStream(options);
 
   ws.on('error', this.emit.bind(this, 'error'));
@@ -55,6 +52,7 @@ LevelAgile.prototype.writeStream = function (options) {
 };
 
 LevelAgile.prototype.readStream = function (options) {
+
   var rs = this.db.createReadStream(options);
 
   rs.on('error', this.emit.bind(this, 'error'));
@@ -62,6 +60,10 @@ LevelAgile.prototype.readStream = function (options) {
   return rs;
 };
 
-module.exports = function(options) {
+LevelAgile.prototype.liveStream = function (options) {
+  return liveStream(options)(this.db);
+};
+
+module.exports = function (options) {
   return new LevelAgile(options);
 };
