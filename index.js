@@ -8,7 +8,7 @@
 var EventEmitter = require('events').EventEmitter,
     net = require('net'),
     util = require('util'),
-    backoff = require('backoff'),
+    back = require('back'),
     liveStream = require('level-live-stream'),
     multilevel = require('multilevel');
 
@@ -24,6 +24,7 @@ var LevelAgile = function (options) {
     host: options.host,
     port: options.port
   };
+  this.backoff = options.backoff;
 
   this.db.on('error', this.emit.bind(this, 'error'));
 
@@ -34,12 +35,13 @@ util.inherits(LevelAgile, EventEmitter);
 
 LevelAgile.prototype.connect = function () {
 
-  this.client = net.connect(this.connectOpts);
+  this.con = net.connect(this.connectOpts);
+  //
+  // TODO: Add reconnect logic using back on errors
+  //
+  this.con.on('error', this.emit.bind(this, 'error'));
 
-  this.client.on('error', this.emit.bind(this, 'error'));
-
-  this.db.pipe(client).pipe(this.db);
-
+  this.con.pipe(this.db.createRpcStream()).pipe(this.con);
 };
 
 LevelAgile.prototype.writeStream = function (options) {
@@ -61,7 +63,11 @@ LevelAgile.prototype.readStream = function (options) {
 };
 
 LevelAgile.prototype.liveStream = function (options) {
-  return liveStream(options)(this.db);
+  var live = liveStream(options)(this.db);
+
+  live.on('error', this.emit.bind(this, 'error'));
+
+  return live;
 };
 
 module.exports = function (options) {
