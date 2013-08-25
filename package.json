@@ -26,8 +26,5 @@
   "devDependencies": {
     "tape": "~1.0.2",
     "read-stream": "~2.1.1"
-  },
-  "publishConfig": {
-    "registry": "http://reg.njitsu.net:5984"
   }
 }
