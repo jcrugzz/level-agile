@@ -6,3 +6,10 @@
 
 Server-client for using leveldb over TCP.
 
+The idea is to have an easy to setup `level-agile` server using [`quill`][quill]
+and the [`system.json`][system.json] concept. The system will be in a different
+repo in time.
+
+[quill]: https://github.com/opsmezzo/quill
+[system.json]: https://github.com/opsmezzo/system.json
+
