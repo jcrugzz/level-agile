@@ -7,13 +7,13 @@ nconf
   .argv({
     help:    { alias: 'h' },
     port:    { alias: 'p' },
-    database:{ alias: 'db'},
+    location:{ alias: 'l'},
     config:  { alias: 'c' }
   });
 
 nconf.defaults({
   port: 4444,
-  database: '/tmp/logs.db',
+  level: { location: 'level-agile.db' },
   config: 'config/devolopment.json'
 });
 
@@ -24,7 +24,7 @@ if (nconf.get('help')) {
    'usage: level-agile [options]\n',
     'options:',
     '  -p,  --port     Port to start level-agile on',
-    '  -db, --database Database path for leveldb',
+    '  -l   --location Path to leveldb database',
     '  -c,  --config   Config file to use',
     '  -g,  --group    Group to work on',
     '  -h,  --help     You\'re staring at it'
@@ -33,9 +33,9 @@ if (nconf.get('help')) {
 }
 
 var port = nconf.get('port');
-var database = nconf.get('database');
+var level = nconf.get('level');
 
-var server = levelServer(database).listen(port, function () {
+var server = levelServer(level).listen(port, function () {
   console.log('leve-agile listening on port ' + port);
 });
 
