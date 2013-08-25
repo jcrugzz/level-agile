@@ -2,7 +2,6 @@ var test = require('tape');
 
 var levelAgile = require('../');
 var levelServer = require('../lib/server')
-var timestamp = require('monotonic-timestamp');
 var fromArray = require('read-stream/array');
 var data = require('./fixtures/data');
 
