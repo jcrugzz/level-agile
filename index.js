@@ -13,7 +13,7 @@ var EventEmitter = require('events').EventEmitter,
     multilevel = require('multilevel');
 
 var LevelAgile = function (options) {
-  if (!options || !options.host || !options.port || !options.transform) {
+  if (!options || !options.host || !options.port)  {
     throw new Error('Port and host are necessary in order to connect to the server');
   }
 
@@ -35,13 +35,13 @@ util.inherits(LevelAgile, EventEmitter);
 
 LevelAgile.prototype.connect = function () {
 
-  this.con = net.connect(this.connectOpts);
+  this.socket = net.connect(this.connectOpts);
   //
   // TODO: Add reconnect logic using back on errors
   //
-  this.con.on('error', this.emit.bind(this, 'error'));
+  this.socket.on('error', this.emit.bind(this, 'error'));
 
-  this.con.pipe(this.db.createRpcStream()).pipe(this.con);
+  this.socket.pipe(this.db.createRpcStream()).pipe(this.socket);
 };
 
 LevelAgile.prototype.writeStream = function (options) {
@@ -68,6 +68,11 @@ LevelAgile.prototype.liveStream = function (options) {
   live.on('error', this.emit.bind(this, 'error'));
 
   return live;
+};
+
+LevelAgile.prototype.close = function () {
+  this.socket.destroy();
+  this.emit('close');
 };
 
 module.exports = function (options) {
