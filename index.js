@@ -48,8 +48,6 @@ LevelAgile.prototype.writeStream = function (options) {
 
   var ws = this.db.createWriteStream(options);
 
-  ws.on('error', this.emit.bind(this, 'error'));
-
   return ws;
 };
 
@@ -57,15 +55,11 @@ LevelAgile.prototype.readStream = function (options) {
 
   var rs = this.db.createReadStream(options);
 
-  rs.on('error', this.emit.bind(this, 'error'));
-
   return rs;
 };
 
 LevelAgile.prototype.liveStream = function (options) {
   var live = liveStream(options)(this.db);
-
-  live.on('error', this.emit.bind(this, 'error'));
 
   return live;
 };
