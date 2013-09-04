@@ -1,7 +1,7 @@
 {
   "name": "level-agile",
   "description": "multilevel client and server with various data transforms for inserting into leveldb",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": {
     "url": "git://github.com/jcrugzz/level-agile.git"
   },
