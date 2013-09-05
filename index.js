@@ -9,8 +9,8 @@ var EventEmitter = require('events').EventEmitter,
     net = require('net'),
     util = require('util'),
     back = require('back'),
-    liveStream = require('level-live-stream'),
-    multilevel = require('multilevel');
+    multilevel = require('multilevel'),
+    manifest = require('./manifest.json');
 
 var LevelAgile = function (options) {
   if (!options || !options.host || !options.port)  {
@@ -19,7 +19,7 @@ var LevelAgile = function (options) {
 
   EventEmitter.call(this);
 
-  this.db = multilevel.client();
+  this.db = multilevel.client(manifest);
   this.connectOpts = {
     host: options.host,
     port: options.port
@@ -59,7 +59,7 @@ LevelAgile.prototype.readStream = function (options) {
 };
 
 LevelAgile.prototype.liveStream = function (options) {
-  var live = liveStream(options)(this.db);
+  var live = this.db.liveStream(options);
 
   return live;
 };
