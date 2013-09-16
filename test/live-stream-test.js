@@ -1,4 +1,4 @@
-var test = require('tape');
+var test = require('tap').test;
 
 var levelAgile = require('../');
 var levelServer = require('../lib/server');

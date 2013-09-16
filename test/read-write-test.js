@@ -1,4 +1,4 @@
-var test = require('tape');
+var test = require('tap').test;
 
 var levelAgile = require('../');
 var levelServer = require('../lib/server')
@@ -23,6 +23,8 @@ test('write and then read from database', function (t) {
     var inputStream = fromArray(data);
 
     var ws = level.writeStream();
+
+    ws.on('error', t.fail.bind(t));
 
     inputStream.pipe(ws);
 
