@@ -39,7 +39,7 @@ function LevelAgile(options) {
     host: options.host,
     port: options.port
   };
-  this.reconnect = options.reconnect;
+  this.backoff = options.reconnect;
 
   this.db.on('error', this.emit.bind(this, 'error'));
 
@@ -68,7 +68,7 @@ LevelAgile.prototype.connect = function () {
 };
 
 LevelAgile.prototype.reconnect = function (err) {
-  this.attempt = this.attempt || copy(this.reconnect);
+  this.attempt = this.attempt || copy(this.backoff);
 
   return this.terminate
     ? noop()
