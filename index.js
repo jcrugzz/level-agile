@@ -28,7 +28,6 @@ function LevelAgile(options) {
   if (!options || !options.host || !options.port)  {
     throw new Error('Port and host are necessary in order to connect to the server');
   }
-
   EventEmitter.call(this);
 
   //
@@ -40,6 +39,7 @@ function LevelAgile(options) {
     port: options.port
   };
   this.backoff = options.reconnect;
+  this.attempt = null;
 
   this.db.on('error', this.emit.bind(this, 'error'));
 
@@ -51,7 +51,7 @@ LevelAgile.prototype.connect = function () {
   this.socket = net.connect(this.connectOpts);
 
   this.socket.on('error', function (err) {
-    return this.reconnect
+    return this.backoff
       ? this.reconnect(err)
       : this.emit('error', err);
   }.bind(this));
@@ -61,7 +61,6 @@ LevelAgile.prototype.connect = function () {
     // Reset terminate variable as we are now connected
     //
     this.terminate = false;
-    this.emit('connect');
   });
 
   this.socket.pipe(this.db.createRpcStream()).pipe(this.socket);
