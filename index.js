@@ -39,44 +39,60 @@ function LevelAgile(options) {
     host: options.host,
     port: options.port
   };
-  this.backoff = options.backoff;
+  this.reconnect = options.reconnect;
 
   this.db.on('error', this.emit.bind(this, 'error'));
 
   this.connect();
 };
 
-util.inherits(LevelAgile, EventEmitter);
-
 LevelAgile.prototype.connect = function () {
 
   this.socket = net.connect(this.connectOpts);
-  //
-  // TODO: Add reconnect logic using back on errors
-  //
-  this.socket.on('error', this.emit.bind(this, 'error'));
+
+  this.socket.on('error', function (err) {
+    return this.reconnect
+      ? this.reconnect(err)
+      : this.emit('error', err);
+  }.bind(this));
+
+  this.socket.on('connect', function () {
+    //
+    // Reset terminate variable as we are now connected
+    //
+    this.terminate = false;
+    this.emit('connect');
+  });
 
   this.socket.pipe(this.db.createRpcStream()).pipe(this.socket);
 };
 
+LevelAgile.prototype.reconnect = function (err) {
+  this.attempt = this.attempt || copy(this.reconnect);
+
+  return this.terminate
+    ? noop()
+    : back(function (fail, backoff) {
+      if (fail) {
+        this.terminate = true;
+        this.attempt = null;
+        return this.emit('error', err);
+      }
+      this.emit('reconnect', backoff);
+      return this.connect();
+    }.bind(this), this.attempt);
+};
+
 LevelAgile.prototype.writeStream = function (options) {
-
-  var ws = this.db.createWriteStream(options);
-
-  return ws;
+  return this.db.createWriteStream(options);
 };
 
 LevelAgile.prototype.readStream = function (options) {
-
-  var rs = this.db.createReadStream(options);
-
-  return rs;
+   return this.db.createReadStream(options);
 };
 
 LevelAgile.prototype.liveStream = function (options) {
-  var live = this.db.liveStream(options);
-
-  return live;
+  return this.db.liveStream(options);
 };
 
 LevelAgile.prototype.close = function () {
@@ -84,6 +100,4 @@ LevelAgile.prototype.close = function () {
   this.emit('close');
 };
 
-module.exports = function (options) {
-  return new LevelAgile(options);
-};
+function noop() {};
