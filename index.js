@@ -9,16 +9,31 @@ var EventEmitter = require('events').EventEmitter,
     net = require('net'),
     util = require('util'),
     back = require('back'),
+    copy = require('shallow-copy'),
     multilevel = require('multilevel'),
     manifest = require('./manifest.json');
 
-var LevelAgile = function (options) {
+//
+// Expose function
+//
+module.exports = LevelAgile;
+
+//
+// Make it an EventEmitter
+//
+util.inherits(LevelAgile, EventEmitter);
+
+function LevelAgile(options) {
+  if (!(this instanceof LevelAgile)) { return new LevelAgile(options) }
   if (!options || !options.host || !options.port)  {
     throw new Error('Port and host are necessary in order to connect to the server');
   }
 
   EventEmitter.call(this);
 
+  //
+  // TODO: Make this manifest configurable
+  //
   this.db = multilevel.client(manifest);
   this.connectOpts = {
     host: options.host,
